@@ -1,0 +1,24 @@
+{% extends "layout.html" %} {%block content%}
+<h2>Add a new School</h2>
+<form action="/admin/add" method="POST">
+  <label for="name">name</label>
+  <input name="name" id="name" type="text" />
+  <label for="address">address</label>
+  <input name="address" id="address" type="text" />
+  <label for="phone">phone</label>
+  <input name="phone" id="phone" type="text" />
+  <label for="email">email</label>
+  <input name="email" id="email" type="text" />
+  <label for="items_collected">items_collected</label>
+  <input name="items_collected" id="items_collected" type="text" />
+  <label for="longitude">longitude</label>
+  <input name="longitude" id="longitude" type="text" />
+  <label for="latitude">latitude</label>
+  <input name="latitude" id="latitude" type="text" />
+  <label for="photo">photo</label>
+  <input name="photo" id="photo" type="text" />
+  <label for="photo_profile">photo_profile</label>
+  <input name="photo_profile" id="photo_profile" type="text" />
+  <input type="submit" value="Add" />
+</form>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "layout.html" %} {% block link %}
+<link
+  rel="stylesheet"
+  href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"
+/>
+{% endblock %} {% block content %}
+<h2>Find a school</h2>
+<div id="map" style="height: 250px"></div>
+
+{% endblock %} {% block javascript %}
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+<script type="text/javascript">
+  navigator.geolocation.getCurrentPosition((position) => {
+    let latlng = new L.LatLng(
+      position.coords.latitude,
+      position.coords.longitude
+    );
+
+    // The first parameter are the coordinates of the center of the map
+    // The second parameter is the zoom level
+    var map = L.map('map').setView(latlng, 11);
+
+    // {s}, {z}, {x} and {y} are placeholders for map tiles
+    // {x} and {y} are the x/y of where you are on the map
+    // {z} is the zoom level
+    var layer = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }
+    ).addTo(map);
+
+    // Now add the layer onto the map
+    map.addLayer(layer);
+
+    let school = {};
+    ('{% for row in rows %}');
+    school = {
+      id: '{{ row["id"] }}',
+      name: '{{ row["name"] }}',
+      latitude: '{{ row["latitude"] }}',
+      longitude: '{{ row["longitude"] }}',
+    };
+
+    // It even opens up a popup when you click it!
+    L.marker([school.latitude, school.longitude])
+      .addTo(map)
+      .bindPopup(`<a href="/school?id=${school.id}">${school.name}</a>`)
+      .openPopup();
+
+    ('{% endfor %}');
+  });
+</script>
+{% endblock %}

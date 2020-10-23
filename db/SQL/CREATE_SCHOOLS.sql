@@ -1,0 +1,2 @@
+-- SQLite
+CREATE TABLE 'schools' ( 'id' INTEGER PRIMARY KEY, 'name' VARCHAR(255), 'address' VARCHAR(255), 'phone' VARCHAR(20), 'email' VARCHAR(255), 'items_collected' VARCHAR(20), 'longitude' Decimal(9,6), 'latitude' Decimal(8,6), 'photo' VARCHAR(255), 'photo_profile' VARCHAR(255) ); 
