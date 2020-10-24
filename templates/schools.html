@@ -5,6 +5,7 @@
 />
 {% endblock %} {% block content %}
 <h2>Find a school</h2>
+<a href="/logout">Logout</a>
 <div id="map" style="height: 250px"></div>
 
 {% endblock %} {% block javascript %}
@@ -47,7 +48,7 @@
     // It even opens up a popup when you click it!
     L.marker([school.latitude, school.longitude])
       .addTo(map)
-      .bindPopup(`<a href="/school?id=${school.id}">${school.name}</a>`)
+      .bindPopup(`<a href="/school/${school.id}">${school.name}</a>`)
       .openPopup();
 
     ('{% endfor %}');

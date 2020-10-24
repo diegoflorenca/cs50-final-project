@@ -1,0 +1,9 @@
+{% extends "layout.html" %} {% block content %}
+<h2>{{ row['name'] }}</h2>
+
+<ul>
+  {% for item in items %}
+  <li>{{item['item_id']}}</li>
+  {% endfor%}
+</ul>
+<a href='/donate/{{ row["id"] }}'>Donate</a> {% endblock %}

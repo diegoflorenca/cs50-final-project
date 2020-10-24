@@ -1,24 +1,74 @@
 {% extends "layout.html" %} {%block content%}
 <h2>Add a new School</h2>
 <form action="/admin/add" method="POST">
-  <label for="name">name</label>
-  <input name="name" id="name" type="text" />
-  <label for="address">address</label>
-  <input name="address" id="address" type="text" />
-  <label for="phone">phone</label>
-  <input name="phone" id="phone" type="text" />
-  <label for="email">email</label>
-  <input name="email" id="email" type="text" />
-  <label for="items_collected">items_collected</label>
-  <input name="items_collected" id="items_collected" type="text" />
-  <label for="longitude">longitude</label>
-  <input name="longitude" id="longitude" type="text" />
-  <label for="latitude">latitude</label>
-  <input name="latitude" id="latitude" type="text" />
-  <label for="photo">photo</label>
-  <input name="photo" id="photo" type="text" />
-  <label for="photo_profile">photo_profile</label>
-  <input name="photo_profile" id="photo_profile" type="text" />
+  <fieldset>
+    <legend>Informations about the school.</legend>
+    <div>
+      <label for="name">name</label>
+      <input name="name" id="name" type="text" />
+    </div>
+    <div>
+      <label for="address">address</label>
+      <input name="address" id="address" type="text" />
+    </div>
+    <div>
+      <label for="phone">phone</label>
+      <input name="phone" id="phone" type="text" />
+    </div>
+    <div>
+      <label for="email">email</label>
+      <input name="email" id="email" type="text" />
+    </div>
+    <div>
+      <label for="password">password</label>
+      <input name="password" id="password" type="text" />
+    </div>
+    <div>
+      <label for="latitude">latitude</label>
+      <input name="latitude" id="latitude" type="text" />
+    </div>
+    <div>
+      <label for="longitude">longitude</label>
+      <input name="longitude" id="longitude" type="text" />
+    </div>
+    <div>
+      <label for="photo">photo</label>
+      <input name="photo" id="photo" type="text" />
+    </div>
+    <div>
+      <label for="photo_profile">photo_profile</label>
+      <input name="photo_profile" id="photo_profile" type="text" />
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Choose which items this school accepts.</legend>
+    <div>
+      <input type="checkbox" id="smartphone" name="items" value="1" />
+      <label for="smartphone">Smartphone</label>
+    </div>
+    <div>
+      <input type="checkbox" id="desktop" name="items" value="2" />
+      <label for="desktop">Desktop Computer</label>
+    </div>
+    <div>
+      <input type="checkbox" id="laptop" name="items" value="3" />
+      <label for="laptop">Laptop</label>
+    </div>
+    <div>
+      <input type="checkbox" id="monitor" name="items" value="6" />
+      <label for="monitor">Monitor</label>
+    </div>
+    <div>
+      <input type="checkbox" id="printer" name="items" value="4" />
+      <label for="printer">Printer</label>
+    </div>
+    <div>
+      <input type="checkbox" id="cable" name="items" value="5" />
+      <label for="cable">Cable</label>
+    </div>
+  </fieldset>
+
   <input type="submit" value="Add" />
 </form>
 {% endblock %}

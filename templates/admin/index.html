@@ -3,6 +3,7 @@
 <h2>Administration Painel</h2>
 
 <a href="/admin/add">Add school</a>
+<a href="/logout">Logout</a>
 
 <table border="1">
   <thead>
@@ -10,11 +11,12 @@
     <td>address</td>
     <td>phone</td>
     <td>email</td>
-    <td>items_collected</td>
+    <td>password</td>
     <td>latitude</td>
     <td>longitude</td>
     <td>photo</td>
     <td>photo_profile</td>
+    <td>--</td>
   </thead>
   {% for row in rows %}
   <tr>
@@ -22,11 +24,12 @@
     <td>{{ row['address'] }}</td>
     <td>{{ row['phone'] }}</td>
     <td>{{ row['email'] }}</td>
-    <td>{{ row['items_collected'] }}</td>
+    <td>{{ row['password'] }}</td>
     <td>{{ row['latitude'] }}</td>
     <td>{{ row['longitude'] }}</td>
     <td>{{ row['photo'] }}</td>
     <td>{{ row['photo_profile'] }}</td>
+    <td><a href="/admin/remove/{{ row['id'] }}">Remove</a></td>
   </tr>
   {% endfor %}
 </table>
