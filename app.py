@@ -17,12 +17,22 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        isSchool = request.form.get('isSchool')
 
         con = sql.connect(DATABASE)
         con.row_factory = sql.Row
         cursor = con.cursor()
-        cursor.execute(
-            "SELECT * FROM `users` WHERE email = ?", [email])
+
+        # Check if it's a school or user login
+        if(isSchool):
+            print('This is a school login!')
+            cursor.execute(
+                "SELECT * FROM `schools` WHERE email = ?", [email])
+            redirectPage = '/school_page'
+        else:
+            cursor.execute("SELECT * FROM `users` WHERE email = ?", [email])
+            redirectPage = '/schools'
+
         rows = cursor.fetchall()
         row = rows[0]
         # Need to Hash Password
@@ -30,7 +40,7 @@ def login():
             msg = 'Password incorect, please try again.'
             return render_template('result.html', page='/login', text='Go Back', msg=msg)
         session['userId'] = row['id']
-        return redirect('/schools')
+        return redirect(redirectPage)
     else:
         return render_template('login.html')
 
@@ -81,31 +91,92 @@ def ong(schoolId):
     if 'userId' in session:
         con = sql.connect(DATABASE)
         con.row_factory = sql.Row
-
         cursor = con.cursor()
         cursor.execute('SELECT * FROM `schools` WHERE id=?', [schoolId])
+        row = cursor.fetchone()
 
-        rows = cursor.fetchall()
-        row = rows[0]
-
+        # Show the info about the itens based on the type of itens needed by the school
         cursor.execute(
-            'SELECT * FROM `schools_items` WHERE `school_id`=?', [schoolId])
+            'SELECT * FROM school_items INNER JOIN items ON items.id = school_items.item_id WHERE school_items.school_id=?', [schoolId])
         items = cursor.fetchall()
         return render_template('school.html', row=row, items=items)
     else:
         return redirect('/login')
 
 
-@app.route('/donate')
-def donate():
+@app.route('/donate/<schoolId>', methods=['POST', 'GET'])
+def donate(schoolId):
     if 'userId' in session:
-        school = request.args.get('name')
-        return f"<h1>Donate to {school} </h1> <a href='/schools'>schools</a>"
+        if request.method == 'POST':
+
+            # Get all items from form
+            selectedItems = request.form.getlist('items')
+
+            con = sql.connect(DATABASE)
+            con.row_factory = sql.Row
+            cursor = con.cursor()
+
+            # Fetch school data
+            cursor.execute('SELECT * FROM `schools` WHERE id=?', [schoolId])
+            school = cursor.fetchone()
+
+            items = []
+
+            for item in selectedItems:
+                cursor.execute('SELECT * FROM `items` WHERE id=?', [item])
+                row = cursor.fetchone()
+                items.append({"id": row['id'], "name": f"{row['name']}"})
+
+            session['items'] = items
+
+            return render_template('/donate.html', school=school, items=items)
+        else:
+            return redirect('/schools')
     else:
         return redirect('/login')
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/donated/<schoolId>', methods=['POST', 'GET'])
+def donated(schoolId):
+    if (request.method == 'POST'):
+
+        userId = session['userId']
+
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+        cursor = con.cursor()
+
+        # Loop through all selected items
+        for item in session['items']:
+            itemAmount = request.form.get('item-' + str(item['id']))
+
+            # Insert donation into donations table
+            cursor.execute("INSERT INTO `donations` (user_id, school_id, item_id, amount, received) VALUES (?, ?, ?, ?, ?)",
+                           (userId, schoolId, item['id'], itemAmount, 0))
+            con.commit()
+
+        return render_template('/donated.html')
+
+
+@ app.route('/school_page')
+def schoolPage():
+    if 'userId' in session:
+        schoolId = session['userId']
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+
+        cursor = con.cursor()
+        cursor.execute(
+            'SELECT * FROM `donations` WHERE school_id=?', [schoolId])
+
+        rows = cursor.fetchall()
+
+        return render_template('school_page.html', rows=rows,)
+    else:
+        return redirect('/login')
+
+
+@ app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -140,7 +211,7 @@ def admin():
             return render_template('admin/login.html')
 
 
-@app.route('/admin/add', methods=['POST', 'GET'])
+@ app.route('/admin/add', methods=['POST', 'GET'])
 def add():
     if 'isAdmin' in session:
         if request.method == 'POST':
@@ -183,7 +254,7 @@ def add():
         return redirect('/admin')
 
 
-@app.route('/admin/remove/<id>')
+@ app.route('/admin/remove/<id>')
 def remove(id):
     if 'isAdmin' in session:
         try:
@@ -205,7 +276,7 @@ def remove(id):
         return redirect('/admin')
 
 
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     session.pop('userId', None)
     if 'isAdmin' in session:
