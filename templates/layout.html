@@ -7,6 +7,11 @@
     {% block link %} {% endblock %}
   </head>
   <body>
+    <header>
+      <ul>
+        {% block headerLinks %} {% endblock %}
+      </ul>
+    </header>
     {% block content %} {% endblock %} {% block javascript %} {% endblock %}
   </body>
 </html>

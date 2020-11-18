@@ -1,0 +1,16 @@
+{% extends 'layout.html' %} {% block content %}
+<h1>{{ school['name'] }}</h1>
+
+<h2>Confirm the items to be donated and their quantities.</h2>
+
+{{ items }}
+
+<form action="/donated/{{ school['id'] }}" method="POST">
+  {% for item in items %}
+  <input type="hidden" name="id" value="{{item.id}}" />
+  <label for="{{item.id}}">{{item.name}}</label>
+  <input type="number" name="item-{{item.id}}" id="{{item.id}}" value="1" />
+  {% endfor %}
+  <input type="submit" value="Confirm" />
+</form>
+{% endblock %}

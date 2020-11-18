@@ -1,9 +1,40 @@
 {% extends "layout.html" %} {% block content %}
-<h2>{{ row['name'] }}</h2>
+<h2>{{ school['name'] }}</h2>
+
+<img
+  src="{{ school['photo'] }}"
+  alt="Photo of the {{ school['name'] }} school."
+/>
 
 <ul>
-  {% for item in items %}
-  <li>{{item['item_id']}}</li>
-  {% endfor%}
+  <li class="address">{{ school['address'] }}</li>
+  <li class="phone">{{ school['phone'] }}</li>
+  <li class="email">{{ school['email'] }}</li>
 </ul>
-<a href='/donate/{{ row["id"] }}'>Donate</a> {% endblock %}
+
+<form action="/donate/{{ school['id'] }}" method="POST">
+  <ul>
+    {% for item in items %}
+    <li>
+      <input
+        type="checkbox"
+        id="check-{{ item['name'] }}"
+        name="items"
+        value="{{item['item_id']}}"
+      />
+      <label for="check-{{ item['name'] }}">
+        <img
+          src="{{ item['icon'] }}"
+          alt="icon for {{ item['description'] }}"
+        />
+        {{ item['name'] }}
+      </label>
+    </li>
+    {% endfor%}
+  </ul>
+  <input type="submit" value="Make a donation" />
+</form>
+{% endblock %}
+
+<!-- Checkbox ideia: https://codepen.io/echosoft/pen/RaVEvG -->
+<!-- <div class="tooltip">{{ item['description'] }}</div> -->

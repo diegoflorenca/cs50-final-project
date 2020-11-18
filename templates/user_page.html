@@ -1,0 +1,23 @@
+{% extends "layout.html" %} {% block content %}
+
+<h2>Donations History</h2>
+
+<a href="/logout">Logout</a>
+
+<table border="1">
+  <thead>
+    <td>School Name</td>
+    <td>Donated Item</td>
+    <td>Amount</td>
+    <td>Status</td>
+  </thead>
+  {% for donation in donations %}
+  <tr>
+    <td>{{ donation[0] }}</td>
+    <td>{{ donation[1] }}</td>
+    <td>{{ donation[2] }}</td>
+    <td>{% if donation[3] == 0 %} No {% else %} Yes {% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock%}

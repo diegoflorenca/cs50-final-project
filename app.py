@@ -80,8 +80,8 @@ def schools():
         cursor = con.cursor()
         cursor.execute('SELECT * FROM schools')
 
-        rows = cursor.fetchall()
-        return render_template('schools.html', rows=rows)
+        schools = cursor.fetchall()
+        return render_template('schools.html', schools=schools)
     else:
         return redirect('/login')
 
@@ -93,13 +93,13 @@ def ong(schoolId):
         con.row_factory = sql.Row
         cursor = con.cursor()
         cursor.execute('SELECT * FROM `schools` WHERE id=?', [schoolId])
-        row = cursor.fetchone()
+        school = cursor.fetchone()
 
         # Show the info about the itens based on the type of itens needed by the school
         cursor.execute(
             'SELECT * FROM school_items INNER JOIN items ON items.id = school_items.item_id WHERE school_items.school_id=?', [schoolId])
         items = cursor.fetchall()
-        return render_template('school.html', row=row, items=items)
+        return render_template('school.html', school=school, items=items)
     else:
         return redirect('/login')
 
@@ -158,7 +158,24 @@ def donated(schoolId):
         return render_template('/donated.html')
 
 
-@ app.route('/school_page')
+@app.route('/user_page')
+def userPage():
+    if 'userId' in session:
+        userId = session['userId']
+
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+
+        cursor = con.cursor()
+        cursor.execute(
+            'SELECT schools.name, items.name, donations.amount, donations.received FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id WHERE donations.user_id=?', [userId])
+
+        donations = cursor.fetchall()
+
+        return render_template('user_page.html', donations=donations)
+
+
+@app.route('/school_page')
 def schoolPage():
     if 'userId' in session:
         schoolId = session['userId']
@@ -176,7 +193,7 @@ def schoolPage():
         return redirect('/login')
 
 
-@ app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -211,7 +228,7 @@ def admin():
             return render_template('admin/login.html')
 
 
-@ app.route('/admin/add', methods=['POST', 'GET'])
+@app.route('/admin/add', methods=['POST', 'GET'])
 def add():
     if 'isAdmin' in session:
         if request.method == 'POST':
@@ -254,7 +271,7 @@ def add():
         return redirect('/admin')
 
 
-@ app.route('/admin/remove/<id>')
+@app.route('/admin/remove/<id>')
 def remove(id):
     if 'isAdmin' in session:
         try:
@@ -276,7 +293,7 @@ def remove(id):
         return redirect('/admin')
 
 
-@ app.route('/logout')
+@app.route('/logout')
 def logout():
     session.pop('userId', None)
     if 'isAdmin' in session:

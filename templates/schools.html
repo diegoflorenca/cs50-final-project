@@ -3,6 +3,9 @@
   rel="stylesheet"
   href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"
 />
+{% endblock %} {% block headerLinks %}
+<li><a href="/user_page">Donation History</a></li>
+<li><a href="/rank">Global Rank</a></li>
 {% endblock %} {% block content %}
 <h2>Find a school</h2>
 <a href="/logout">Logout</a>
@@ -37,12 +40,12 @@
     map.addLayer(layer);
 
     let school = {};
-    ('{% for row in rows %}');
+    ('{% for school in schools %}');
     school = {
-      id: '{{ row["id"] }}',
-      name: '{{ row["name"] }}',
-      latitude: '{{ row["latitude"] }}',
-      longitude: '{{ row["longitude"] }}',
+      id: '{{ school["id"] }}',
+      name: '{{ school["name"] }}',
+      latitude: '{{ school["latitude"] }}',
+      longitude: '{{ school["longitude"] }}',
     };
 
     // It even opens up a popup when you click it!
@@ -54,4 +57,5 @@
     ('{% endfor %}');
   });
 </script>
+
 {% endblock %}
