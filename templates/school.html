@@ -1,13 +1,21 @@
-{% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %} {% block headerLinks %}
+<li><a href="/user_page">Donation History</a></li>
+<li><a href="/rank">Global Rank</a></li>
+<li><a href="/schools">Schools</a></li>
+{% endblock %} {% block content %}
 <h2>{{ school['name'] }}</h2>
 
 <img
-  src="{{ school['photo'] }}"
-  alt="Photo of the {{ school['name'] }} school."
+  src="{{ url_for('static', filename = 'uploads/' + school['photo']) }}"
+  alt="Profile picture of the {{ school['name'] }}."
+  width="250px"
 />
 
 <ul>
-  <li class="address">{{ school['address'] }}</li>
+  <li class="address">
+    {{ school['address'] }} - {{ school['city'] }} - {{ school['state'] }} - {{
+    school['country'] }}
+  </li>
   <li class="phone">{{ school['phone'] }}</li>
   <li class="email">{{ school['email'] }}</li>
 </ul>

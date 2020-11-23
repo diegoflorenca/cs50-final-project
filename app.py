@@ -1,10 +1,26 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, flash
+import os
+from os.path import join, dirname, realpath
+from werkzeug.utils import secure_filename
 import sqlite3 as sql
+import hashlib
+from datetime import datetime
+
+UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'static\\uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'dYfgd91s5xH6vc7f8ykj6E5465-HvT'
 
 DATABASE = './db/data.db'
+
+# check the allowed files - Flask documentation example
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/')
@@ -33,13 +49,16 @@ def login():
             cursor.execute("SELECT * FROM `users` WHERE email = ?", [email])
             redirectPage = '/schools'
 
-        rows = cursor.fetchall()
-        row = rows[0]
+        user = cursor.fetchone()
+        if not user:
+            flash('User not found.')
+            return redirect('/login')
+
         # Need to Hash Password
-        if row['password'] != password:
-            msg = 'Password incorect, please try again.'
-            return render_template('result.html', page='/login', text='Go Back', msg=msg)
-        session['userId'] = row['id']
+        if user['password'] != password:
+            flash('Password incorect, please try again.')
+            return redirect('/login')
+        session['userId'] = user['id']
         return redirect(redirectPage)
     else:
         return render_template('login.html')
@@ -48,25 +67,47 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        try:
-            name = request.form.get('name')
-            email = request.form.get('email')
-            password = request.form.get('password')
-            photo = request.form.get('photo')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        file = request.files['file']
 
-            with sql.connect(DATABASE) as con:
-                cursor = con.cursor()
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+        cursor = con.cursor()
 
-                cursor.execute("INSERT INTO `users` (name, email, password, photo)VALUES (?,?,?,?)", (
-                    name, email, password, photo))
+        # Check if user already existis
+        cursor.execute("SELECT email FROM `users` WHERE email=?", [email])
+        hasUser = cursor.fetchone()
 
-                con.commit()
-                msg = 'New user added successfully, login to continue!'
-        except:
-            con.rollback()
-            msg = 'Error in insert operation'
-        finally:
-            return render_template('result.html', page='/login', text='Go to login page', msg=msg)
+        if hasUser:
+            flash('User already registred.')
+            return redirect('/register')
+
+        # Check if the type of file is allowed
+        if file and allowed_file(file.filename):
+            # Take the file name
+            filename = secure_filename(file.filename)
+            # Save the file extension
+            extension = filename.rsplit('.', 1)[1]
+            # Sum the current date to the file name
+            filename = filename.rsplit('.', 1)[0] + str(datetime.now().time())
+            # Hash the filename and reinsert the extension
+            h = hashlib.sha256()
+            h.update(filename.encode('utf-8'))
+            newFilename = h.hexdigest() + '.' + extension
+            # Copy the file to the upload folder
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], newFilename))
+        else:
+            flash('Error: Image not uploaded')
+            return redirect('/register')
+
+        cursor.execute("INSERT INTO `users` (name, email, password, photo)VALUES (?,?,?,?)", (
+            name, email, password, newFilename))
+        con.commit()
+
+        flash('New user added successfully, login to continue!')
+        return redirect('/login')
     else:
         return render_template('add_user.html')
 
@@ -168,29 +209,56 @@ def userPage():
 
         cursor = con.cursor()
         cursor.execute(
-            'SELECT schools.name, items.name, donations.amount, donations.received FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id WHERE donations.user_id=?', [userId])
+            'SELECT donations.amount, donations.received, schools.name AS school, items.name AS item, items.scores FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id WHERE donations.user_id=?', [userId])
 
         donations = cursor.fetchall()
 
-        return render_template('user_page.html', donations=donations)
+        score = 0
+        for donation in donations:
+            if donation['received'] == 1:
+                score = score + \
+                    (int(donation['amount']) * int(donation['scores']))
+
+        return render_template('user_page.html', donations=donations, score=score)
 
 
 @app.route('/school_page')
 def schoolPage():
     if 'userId' in session:
         schoolId = session['userId']
+
         con = sql.connect(DATABASE)
         con.row_factory = sql.Row
 
         cursor = con.cursor()
+
+        itemId = request.args.get('id')
+        if itemId:
+            cursor.execute(
+                'UPDATE `donations` SET `received` = 1 WHERE id = ?', [itemId])
+            con.commit()
+
         cursor.execute(
-            'SELECT * FROM `donations` WHERE school_id=?', [schoolId])
+            'SELECT donations.id, donations.amount, donations.received, users.name AS user, items.name AS item, items.scores FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id INNER JOIN `users` ON users.id = donations.user_id WHERE donations.school_id=?', [schoolId])
 
-        rows = cursor.fetchall()
+        donations = cursor.fetchall()
 
-        return render_template('school_page.html', rows=rows,)
+        return render_template('school_page.html', donations=donations)
     else:
         return redirect('/login')
+
+
+@app.route('/rank')
+def rank():
+    if 'userId' in session:
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+        cursor = con.cursor()
+
+        cursor.execute(
+            "SELECT users.name, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
+        rank = cursor.fetchall()
+        return render_template('rank.html', rank=rank)
 
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -202,11 +270,12 @@ def admin():
         con = sql.connect(DATABASE)
         con.row_factory = sql.Row
         cursor = con.cursor()
+
         # TODO Create a field on database to identify an administrator!
         cursor.execute(
             "SELECT * FROM `users` WHERE email = ?", [email])
-        rows = cursor.fetchall()
-        row = rows[0]
+        row = cursor.fetchone()
+
         # TODO Hash Password
         if row['password'] != password:
             msg = 'Password incorect, please try again.'
@@ -222,8 +291,8 @@ def admin():
             cursor = con.cursor()
             cursor.execute('SELECT * FROM `schools`')
 
-            rows = cursor.fetchall()
-            return render_template('admin/index.html', rows=rows)
+            schools = cursor.fetchall()
+            return render_template('admin/index.html', schools=schools)
         else:
             return render_template('admin/login.html')
 
@@ -232,39 +301,58 @@ def admin():
 def add():
     if 'isAdmin' in session:
         if request.method == 'POST':
-            try:
-                # teste with: request.form['name']
-                name = request.form['name']
-                address = request.form['address']
-                phone = request.form['phone']
-                email = request.form['email']
-                password = request.form['password']
-                longitude = request.form['longitude']
-                latitude = request.form['latitude']
-                photo = request.form['photo']
-                photo_profile = request.form['photo_profile']
-                items = request.form.getlist('items')
 
-                with sql.connect(DATABASE) as con:
-                    cursor = con.cursor()
+            # Take the values from the form
+            name = request.form['name']
+            address = request.form['address']
+            city = request.form['city']
+            state = request.form['state']
+            country = request.form['country']
+            phone = request.form['phone']
+            email = request.form['email']
+            password = request.form['password']
+            latitude = request.form['latitude']
+            longitude = request.form['longitude']
+            file = request.files['file']
+            items = request.form.getlist('items')
 
-                    cursor.execute("INSERT INTO `schools` (name, address, phone, email, password, longitude, latitude, photo, photo_profile) VALUES (?,?,?,?,?,?,?,?,?)", (
-                        name, address, phone, email, password, longitude, latitude, photo, photo_profile))
+            con = sql.connect(DATABASE)
+            con.row_factory = sql.Row
+            cursor = con.cursor()
 
-                    con.commit()
+            # Check if the type of file is allowed
+            if file and allowed_file(file.filename):
+                # Take the file name
+                filename = secure_filename(file.filename)
+                # Save the file extension
+                extension = filename.rsplit('.', 1)[1]
+                # Sum the current date to the file name
+                filename = filename.rsplit(
+                    '.', 1)[0] + str(datetime.now().time())
+                # Hash the filename and reinsert the extension
+                h = hashlib.sha256()
+                h.update(filename.encode('utf-8'))
+                newFilename = h.hexdigest() + '.' + extension
+                # Copy the file to the upload folder
+                file.save(os.path.join(
+                    app.config['UPLOAD_FOLDER'], newFilename))
+            else:
+                flash('Error: Image not uploaded')
+                return redirect('/admin')
 
-                    schoolId = cursor.lastrowid
+            cursor.execute("INSERT INTO `schools` (name, address, city, state, country, phone, email, password, latitude, longitude, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (
+                name, address, city, state, country, phone, email, password, latitude, longitude, newFilename))
+            con.commit()
 
-                    for item in items:
-                        cursor.execute(
-                            "INSERT INTO `schools_items` (school_id, item_id) VALUES (?,?)", (schoolId, item))
+            schoolId = cursor.lastrowid
 
-                    msg = 'School successfully added'
-            except:
-                con.rollback()
-                msg = 'Error in insert operation'
-            finally:
-                return render_template('result.html', page='/admin', text='Go Back', msg=msg)
+            for item in items:
+                cursor.execute(
+                    "INSERT INTO `school_items` (school_id, item_id) VALUES (?,?)", (schoolId, item))
+                con.commit()
+
+            flash('School successfully added.')
+            return redirect('/admin')
         else:
             return render_template('admin/add_school.html')
     else:
@@ -274,21 +362,17 @@ def add():
 @app.route('/admin/remove/<id>')
 def remove(id):
     if 'isAdmin' in session:
-        try:
-            with sql.connect(DATABASE) as con:
-                cursor = con.cursor()
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+        cursor = con.cursor()
 
-                cursor.execute("DELETE FROM `schools` WHERE id = ?", [id])
-                cursor.execute(
-                    "DELETE FROM `schools_items` WHERE school_id = ?", [id])
+        cursor.execute("DELETE FROM `schools` WHERE id = ?", [id])
+        cursor.execute(
+            "DELETE FROM `school_items` WHERE school_id = ?", [id])
 
-                con.commit()
-                msg = 'School successfully removed'
-        except:
-            con.rollback()
-            msg = 'Error in delete operation'
-        finally:
-            return render_template('result.html', page='/admin', text='Go Back', msg=msg)
+        con.commit()
+        flash('School successfully removed')
+        return redirect('/admin')
     else:
         return redirect('/admin')
 

@@ -1,4 +1,46 @@
-{% extends "layout.html" %} {% block content %}
-<h1>This is the School Page</h1>
-{% for row in rows %} {{ row['user_id'] }} {{ row['school_id'] }} {{
-row['item_id'] }} {{ row['amount'] }} {% endfor %} {% endblock %}
+{% extends "layout.html" %} {% block headerLinks %}
+<li><a href="/user_page">Donation History</a></li>
+<li><a href="/rank">Global Rank</a></li>
+<li><a href="/schools">Schools</a></li>
+{% endblock %} {% block content %}
+<h2>School name</h2>
+
+<a href="/logout">Logout</a>
+
+<h2>New Donations</h2>
+
+<table border="1">
+  <thead>
+    <td>Donator name</td>
+    <td>Donated item</td>
+    <td>Amount</td>
+    <td colspan="2">Status</td>
+  </thead>
+  {% for donation in donations %} {% if donation['received'] == 0 %}
+  <tr>
+    <td>{{ donation['user'] }}</td>
+    <td>{{ donation['item'] }}</td>
+    <td>{{ donation['amount'] }}</td>
+    <td>Not received</td>
+    <td><a href="/school_page?id={{ donation['id'] }}">Arrived</a></td>
+  </tr>
+  {% endif %} {% endfor %}
+</table>
+
+<h2>Donations History</h2>
+
+<table border="1">
+  <thead>
+    <td>Donator name</td>
+    <td>Donated item</td>
+    <td>Amount</td>
+  </thead>
+  {% for donation in donations %} {% if donation['received'] == 1 %}
+  <tr>
+    <td>{{ donation['user'] }}</td>
+    <td>{{ donation['item'] }}</td>
+    <td>{{ donation['amount'] }}</td>
+  </tr>
+  {% endif %} {% endfor %}
+</table>
+{% endblock%}

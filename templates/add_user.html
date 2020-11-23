@@ -1,17 +1,23 @@
 {% extends "layout.html" %} {% block content %}
 <h2>Register</h2>
-<form action="/register" method="POST">
+
+{% with messages = get_flashed_messages() %} {% if messages %} {% for message in
+messages %}
+<h4>{{ message }}</h4>
+{% endfor %} {% endif %} {% endwith %}
+
+<form action="/register" method="POST" enctype="multipart/form-data">
   <label for="name">name</label>
-  <input name="name" id="name" type="text" />
+  <input name="name" id="name" type="text" required />
 
   <label for="email">email</label>
-  <input name="email" id="email" type="text" />
+  <input name="email" id="email" type="text" required />
 
   <label for="password">password</label>
-  <input name="password" id="password" type="text" />
+  <input name="password" id="password" type="text" required />
 
   <label for="photo">photo</label>
-  <input name="photo" id="photo" type="text" />
+  <input name="file" id="photo" type="file" required />
 
   <input type="submit" value="Register" />
 </form>

@@ -1,15 +1,48 @@
-{% extends "layout.html" %} {%block content%}
+{% extends "layout.html" %} {% block link %}
+<link
+  rel="stylesheet"
+  href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"
+/>
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<style type="text/css">
+  html,
+  body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  .container {
+    width: 95%;
+    max-width: 980px;
+    padding: 1% 2%;
+    margin: 0 auto;
+  }
+  #lat,
+  #lon {
+    text-align: right;
+  }
+  #map {
+    width: 100%;
+    height: 250px;
+    padding: 0;
+    margin: 0;
+  }
+  .address {
+    cursor: pointer;
+  }
+  .address:hover {
+    color: #aa0000;
+    text-decoration: underline;
+  }
+</style>
+{% endblock %} {%block content%}
 <h2>Add a new School</h2>
-<form action="/admin/add" method="POST">
+<form action="/admin/add" method="POST" enctype="multipart/form-data">
   <fieldset>
     <legend>Informations about the school.</legend>
     <div>
       <label for="name">name</label>
       <input name="name" id="name" type="text" />
-    </div>
-    <div>
-      <label for="address">address</label>
-      <input name="address" id="address" type="text" />
     </div>
     <div>
       <label for="phone">phone</label>
@@ -21,23 +54,41 @@
     </div>
     <div>
       <label for="password">password</label>
-      <input name="password" id="password" type="text" />
-    </div>
-    <div>
-      <label for="latitude">latitude</label>
-      <input name="latitude" id="latitude" type="text" />
-    </div>
-    <div>
-      <label for="longitude">longitude</label>
-      <input name="longitude" id="longitude" type="text" />
+      <input name="password" id="password" type="password" />
     </div>
     <div>
       <label for="photo">photo</label>
-      <input name="photo" id="photo" type="text" />
+      <input name="file" id="photo" type="file" />
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Address</legend>
+    <div>
+      <label for="address">address</label>
+      <input name="address" id="address" type="text" />
     </div>
     <div>
-      <label for="photo_profile">photo_profile</label>
-      <input name="photo_profile" id="photo_profile" type="text" />
+      <label for="city">city</label>
+      <input name="city" id="city" type="text" />
+    </div>
+    <div>
+      <label for="state">state</label>
+      <input name="state" id="state" type="text" />
+    </div>
+    <div>
+      <label for="country">country</label>
+      <input name="country" id="country" type="text" />
+    </div>
+    <div class="location">
+      <b>Set school location on map</b>
+      <div id="search">
+        <input type="hidden" name="latitude" value="" id="lat" size="12" />
+        <input type="hidden" name="longitude" value="" id="lon" size="12" />
+        <button type="button" onclick="city_search();">find your city</button>
+        <div id="message"></div>
+      </div>
+      <div id="map"></div>
     </div>
   </fieldset>
 
@@ -71,4 +122,70 @@
 
   <input type="submit" value="Add" />
 </form>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+  // São Paulo, Brazil
+  var startlat = -23.5558559;
+  var startlon = -46.6625292;
+
+  document.getElementById('lat').value = startlat;
+  document.getElementById('lon').value = startlon;
+
+  var options = {
+    center: [startlat, startlon],
+    zoom: 10,
+  };
+
+  var map = L.map('map', options);
+  var nzoom = 12;
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  var myMarker = L.marker([startlat, startlon], {
+    title: 'School coordinates',
+    alt: 'School coordinates',
+    draggable: true,
+  }).addTo(map);
+
+  // Fetch city lat, long and update the map
+  function city_search() {
+    // Get the City and the state from form
+    var city = document.getElementById('city').value;
+    var state = document.getElementById('state').value;
+    var country = document.getElementById('country').value;
+    var inp = `${city}, ${state}, ${country}`;
+    // Send the query to the openstreetmap API
+    var xmlhttp = new XMLHttpRequest();
+    var url =
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + inp;
+    xmlhttp.onreadystatechange = function () {
+      // If has a result, update the map
+      if (this.readyState == 4 && this.status == 200) {
+        // Save the response
+        var arr = JSON.parse(this.responseText);
+        // Check if has a result
+        if (arr.length > 0) {
+          // Save city object
+          var city = arr[0];
+          myMarker.closePopup();
+          // Update the map positison
+          map.setView([city.lat, city.lon], 10);
+          // Update the marker position
+          myMarker.setLatLng([city.lat, city.lon]);
+          // Update the hidden form fields
+          document.getElementById('lat').value = city.lat;
+          document.getElementById('lon').value = city.lon;
+        } else {
+          document.getElementById('message').innerHTML = 'City not found.';
+        }
+      }
+    };
+    xmlhttp.open('GET', url, true);
+    xmlhttp.send();
+  }
+</script>
 {% endblock %}

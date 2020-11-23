@@ -1,0 +1,22 @@
+{% extends "layout.html" %} {% block headerLinks %}
+<li><a href="/user_page">Donation History</a></li>
+<li><a href="/rank">Global Rank</a></li>
+<li><a href="/schools">Schools</a></li>
+{% endblock %} {% block content %}
+<h2>Global Rank</h2>
+
+<a href="/logout">Logout</a>
+
+<table border="1">
+  <thead>
+    <td>Donator name</td>
+    <td>Total socre</td>
+  </thead>
+  {% for r in rank %}
+  <tr>
+    <td>{{ r['name'] }}</td>
+    <td>{{ r['score'] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock%}
