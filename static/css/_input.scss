@@ -1,0 +1,134 @@
+input[type='text'],
+input[type='password'] {
+  display: block;
+  height: 43px;
+  width: 100%;
+  font-size: 1.2em;
+  color: var(--darkgray);
+  border: none;
+  outline: none;
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+input[type='submit'] {
+  width: 100%;
+  font-size: 1.3em;
+  padding: 12px;
+  margin: 20px 0;
+  outline: none;
+  cursor: pointer;
+
+  box-shadow: var(--shadow);
+  transition: all 300ms ease-out;
+}
+.checkbox-label {
+  font-size: 1.2em;
+  margin: 0 1em;
+  cursor: pointer;
+}
+
+// Checkbox style adapted from: https://stackoverflow.com/questions/1120879/css-checkbox-input-styling
+
+input[type='checkbox'] {
+  position: relative;
+  cursor: pointer;
+}
+input[type='checkbox']:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -3px;
+  left: 0;
+  background-color: var(--lightgray);
+}
+input[type='checkbox']:checked:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -3px;
+  left: 0;
+  background-color: var(--green);
+}
+input[type='checkbox']:checked:after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  top: -1px;
+  left: 7px;
+}
+
+// File type to upload an image, adapted from https://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
+// input[type='file'] {
+//   width: 100%;
+//   border-radius: 8px;
+//   text-align: center;
+//   border: 1px solid var(--purple);
+//   display: inline-block;
+//   padding: 11px 12px;
+//   cursor: pointer;
+//   color: var(--purple);
+//   box-shadow: var(--shadow);
+//   background-color: var(--white);
+//   transition: all 300ms ease-in-out;
+//   outline: none;
+
+//   &::-webkit-file-upload-button {
+//     visibility: hidden;
+//   }
+
+//   &::before {
+//     content: 'Select a profile photo';
+//   }
+
+//   &:hover {
+//     color: var(--white);
+//     background-color: var(--purple);
+//   }
+// }
+
+.photo-input {
+  width: 100%;
+  border-radius: 8px;
+  text-align: center;
+  // border: 1px solid var(--purple);
+  display: inline-block;
+  padding: 11px 12px;
+  cursor: pointer;
+  color: var(--purple);
+  box-shadow: var(--shadow);
+  background-color: var(--white);
+  transition: all 300ms ease-in-out;
+  outline: none;
+
+  &:hover {
+    color: var(--white);
+    background-color: var(--purple);
+  }
+
+  .fas {
+    margin-right: 5px;
+  }
+}
+
+input[type='file'] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}

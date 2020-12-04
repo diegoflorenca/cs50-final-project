@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, session, flash
 import os
 from os.path import join, dirname, realpath
+from flask.helpers import send_from_directory
 from werkzeug.utils import secure_filename
 import sqlite3 as sql
 import hashlib
@@ -383,6 +384,13 @@ def logout():
     if 'isAdmin' in session:
         session.pop('isAdmin', None)
     return redirect('/login')
+
+# Favicon route
+
+
+@app.route('/favicon.ico', methods=['GET'])
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'images/favicon.ico')
 
 
 if __name__ == '__main__':

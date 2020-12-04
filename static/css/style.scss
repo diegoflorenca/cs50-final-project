@@ -1,0 +1,26 @@
+:root {
+  --primary: #4d4d4d;
+  --secondary: #ffffff;
+  --white: #fdfdfd;
+  --darkgray: #3d3d3d;
+  --lightgray: #8d8d8d;
+  --green: #3fca28;
+  --purple: #65068a;
+  --shadow: 0px 4px 4px rgba(0, 0, 0, 0.04), 0px 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-big: 0px 8px 8px rgba(0, 0, 0, 0.04),
+    0px 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+@import '_reset.scss';
+
+@import '_header.scss';
+@import '_main.scss';
+
+@import '_button.scss';
+@import '_input.scss';
+
+@import '_home.scss';
+@import '_login.scss';
+@import '_schools.scss';
+
+@import '_util.scss';

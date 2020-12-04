@@ -1,5 +1,16 @@
-{% extends "layout.html" %} {% block content %}
-<h2>Welcome!</h2>
-<a href="/login">Login</a>
-<a href="/register">Register</a>
+{% extends "layout.html" %} {% block pageTitle %} Welcome! {% endblock %} {%
+block content %}
+<div id="home">
+  <div class="welcome-text">
+    <p class="text">
+      Each course contains video lectures, tasks, and text materials. All
+      courses viewed by you are displayed in your personal account. Make the
+      difference!
+    </p>
+  </div>
+  <div class="buttons">
+    <a href="/login" class="button solid">Login</a>
+    <a href="/register" class="button outline">Register</a>
+  </div>
+</div>
 {% endblock %}

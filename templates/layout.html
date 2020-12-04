@@ -3,15 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <title>Reclyce for Education</title>
     {% block link %} {% endblock %}
   </head>
   <body>
-    <header>
-      <ul>
-        {% block headerLinks %} {% endblock %}
-      </ul>
-    </header>
-    {% block content %} {% endblock %} {% block javascript %} {% endblock %}
+    <div id="wrapper">
+      <header>
+        <a href="/">
+          <h1 class="brand">TechRecycle</h1>
+          <span>for education</span>
+        </a>
+        <h2 class="page-title">{% block pageTitle %} {% endblock %}</h2>
+      </header>
+      <main>
+        <ul>
+          {% block headerLinks %} {% endblock %}
+        </ul>
+        {% block content %} {% endblock %}
+      </main>
+    </div>
+    {% block javascript %} {% endblock %}
   </body>
 </html>

@@ -1,0 +1,33 @@
+header {
+  display: flex;
+  margin-bottom: 20px;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+
+  a {
+    width: 209px;
+    display: block;
+    text-align: right;
+    align-self: flex-end;
+    text-decoration: none;
+  }
+
+  .brand {
+    font-size: 2.2em;
+    color: var(--green);
+  }
+
+  span {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .page-title {
+    margin-top: 1.5em;
+    text-align: left;
+    font-size: 1.6em;
+    color: var(--primary);
+    align-self: flex-start;
+  }
+}

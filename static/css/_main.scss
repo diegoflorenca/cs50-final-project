@@ -1,0 +1,16 @@
+main {
+  height: calc(100vh - 171px - 10em);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#wrapper {
+  max-width: 900px;
+  height: calc(100vh - 4em);
+  padding: 3.5em;
+  margin: auto;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: var(--shadow-big);
+}

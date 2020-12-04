@@ -1,24 +1,53 @@
-{% extends "layout.html" %} {% block content %}
-<h2>Register</h2>
-
-{% with messages = get_flashed_messages() %} {% if messages %} {% for message in
-messages %}
-<h4>{{ message }}</h4>
+{% extends "layout.html" %} {% block link %}
+<!-- Font awesome icons -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" />
+{% endblock %} {% block pageTitle %} We are very pleased to welcome a new
+donator! {% endblock %} {% block content %}{% with messages =
+get_flashed_messages() %} {% if messages %} {% for message in messages %}
+<h4 class="center">{{ message }}</h4>
 {% endfor %} {% endif %} {% endwith %}
 
 <form action="/register" method="POST" enctype="multipart/form-data">
-  <label for="name">name</label>
-  <input name="name" id="name" type="text" required />
+  <input name="name" id="name" type="text" placeholder="Your name" required />
 
-  <label for="email">email</label>
-  <input name="email" id="email" type="text" required />
+  <input name="email" id="email" type="text" placeholder="Email" required />
 
-  <label for="password">password</label>
-  <input name="password" id="password" type="text" required />
+  <label for="photo" class="photo-input">
+    <i class="fas fa-arrow-circle-up"></i
+    ><span class="photo-text">Select a profile photo</span>
+  </label>
+  <input id="photo" type="file" name="file" required />
 
-  <label for="photo">photo</label>
-  <input name="file" id="photo" type="file" required />
+  <input
+    name="password"
+    id="password"
+    type="text"
+    placeholder="Password"
+    required
+  />
 
-  <input type="submit" value="Register" />
+  <input type="submit" value="Register" class="button solid" />
 </form>
+{% endblock %} {% block javascript %}
+
+<script>
+  // Code to display the name of the selected image
+  // adapted from: https://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
+
+  // Select the input and the label text
+  let input = document.querySelector('#photo');
+  let label = document.querySelector('.photo-text');
+
+  input.addEventListener('change', function (e) {
+    let fileName = '';
+    fileName = e.target.value.split('\\').pop();
+
+    if (fileName != '') {
+      label.innerHTML = fileName;
+    } else {
+      label.innerHTML = 'Select a profile photo';
+    }
+  });
+</script>
+
 {% endblock %}
