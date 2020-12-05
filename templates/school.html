@@ -1,47 +1,49 @@
-{% extends "layout.html" %} {% block headerLinks %}
-<li><a href="/user_page">Donation History</a></li>
-<li><a href="/rank">Global Rank</a></li>
-<li><a href="/schools">Schools</a></li>
-{% endblock %} {% block content %}
-<h2>{{ school['name'] }}</h2>
+{% extends "layout.html" %} {% block link %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" />
+{% endblock %} {% block pageTitle %} <span class="title">Donation for</span> {{
+school['name'] }}{% endblock %} {% block content %}
+<div id="school">
+  <div
+    class="image"
+    style="background-image: url( {{ url_for('static', filename = 'uploads/' + school['photo']) }} );"
+  ></div>
 
-<img
-  src="{{ url_for('static', filename = 'uploads/' + school['photo']) }}"
-  alt="Profile picture of the {{ school['name'] }}."
-  width="250px"
-/>
-
-<ul>
-  <li class="address">
-    {{ school['address'] }} - {{ school['city'] }} - {{ school['state'] }} - {{
-    school['country'] }}
-  </li>
-  <li class="phone">{{ school['phone'] }}</li>
-  <li class="email">{{ school['email'] }}</li>
-</ul>
-
-<form action="/donate/{{ school['id'] }}" method="POST">
-  <ul>
-    {% for item in items %}
-    <li>
-      <input
-        type="checkbox"
-        id="check-{{ item['name'] }}"
-        name="items"
-        value="{{item['item_id']}}"
-      />
-      <label for="check-{{ item['name'] }}">
-        <img
-          src="{{ item['icon'] }}"
-          alt="icon for {{ item['description'] }}"
-        />
-        {{ item['name'] }}
-      </label>
+  <ul class="school-info">
+    <li class="address">
+      {{ school['address'] }} - {{ school['city'] }} - {{ school['state'] }} -
+      {{ school['country'] }}
     </li>
-    {% endfor%}
+    <li class="phone"><i class="fas fa-phone"> </i>{{ school['phone'] }}</li>
+    <li class="email">
+      <i class="fas fa-envelope"> </i
+      ><a href="mailto:{{ school['email'] }}">{{ school['email'] }}</a>
+    </li>
   </ul>
-  <input type="submit" value="Make a donation" />
-</form>
+  <form action="/donate/{{ school['id'] }}" method="POST">
+    <h3>Choose items do you wan to donate?</h3>
+    <p class="descr">This shcool accepts the folow items:</p>
+    <div class="checks">
+      <ul>
+        {% for item in items %}
+        <li>
+          <input
+            type="checkbox"
+            id="check-{{ item['name'] }}"
+            name="items"
+            value="{{item['item_id']}}"
+          />
+          <label for="check-{{ item['name'] }}">
+            <i class="fas {{ item['icon'] }} fa-3x">
+              <h4 class="center">{{ item['name'] }}</h4>
+            </i>
+          </label>
+        </li>
+        {% endfor%}
+      </ul>
+    </div>
+    <input type="submit" value="Make a donation" class="button solid" />
+  </form>
+</div>
 {% endblock %}
 
 <!-- Checkbox ideia: https://codepen.io/echosoft/pen/RaVEvG -->

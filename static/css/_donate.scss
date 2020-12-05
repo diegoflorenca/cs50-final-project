@@ -1,0 +1,30 @@
+#donation {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  .items {
+    display: grid;
+    grid-template-columns: 135px 100px;
+    place-content: center;
+
+    label {
+      grid-column: 1 / 2;
+      margin: 0.5em 0;
+      padding-top: 15px;
+    }
+
+    input {
+      grid-column: 2 / 3;
+      margin: 0.5em 1em;
+    }
+  }
+  .thanks {
+    margin-top: 150px;
+  }
+  .back {
+    width: 150px;
+    margin: auto;
+  }
+}

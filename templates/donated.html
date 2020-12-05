@@ -1,12 +1,9 @@
-{% extends 'layout.html' %} {% block headerLinks %}
-<li><a href="/user_page">Donation History</a></li>
-<li><a href="/rank">Global Rank</a></li>
-<li><a href="/schools">Schools</a></li>
-{% endblock %}{% block content %}
-<h1>Donation confirmed</h1>
+{% extends 'layout.html' %} {% block pageTitle %} Thanks for your help! {%
+endblock %} {% block content %}
+<div id="donation">
+  <h2 class="center thanks">Donation confirmed</h2>
 
-<h2>Thanks for your help.</h2>
-
-<a href="/schools">Go back</a>
+  <a href="/schools" class="button outline back">Go back</a>
+</div>
 
 {% endblock %}

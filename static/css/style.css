@@ -1,11 +1,16 @@
+@charset "UTF-8";
 :root {
   --primary: #4d4d4d;
   --secondary: #ffffff;
   --white: #fdfdfd;
   --darkgray: #3d3d3d;
   --lightgray: #8d8d8d;
+  --lightergray: #f3f3f3;
   --green: #3fca28;
   --purple: #65068a;
+  --font: 'Roboto', sans-serif;
+  --shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04),
+    0px 2px 8px rgba(0, 0, 0, 0.08);
   --shadow: 0px 4px 4px rgba(0, 0, 0, 0.04), 0px 4px 16px rgba(0, 0, 0, 0.08);
   --shadow-big: 0px 8px 8px rgba(0, 0, 0, 0.04),
     0px 8px 32px rgba(0, 0, 0, 0.08);
@@ -29,12 +34,17 @@ body,
 
 body {
   padding: 2em;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font);
   color: var(--primary);
   background-color: var(--purple);
 }
 
+a {
+  color: var(--purple);
+}
+
 header {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -46,7 +56,7 @@ header {
   font-family: 'Montserrat', sans-serif;
 }
 
-header a {
+header a.full-brand {
   width: 209px;
   display: block;
   text-align: right;
@@ -75,6 +85,39 @@ header .page-title {
       align-self: flex-start;
 }
 
+header nav {
+  width: 436px;
+  padding: 0 10px;
+  position: absolute;
+  top: -56px;
+  left: -56px;
+  border-radius: 8px 0 8px 0;
+}
+
+header nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+header nav ul li {
+  list-style: none;
+}
+
+header nav ul li a {
+  display: block;
+  text-decoration: none;
+  padding: 1.2em 0.6em;
+  color: var(--purple);
+}
+
+header nav ul li a:hover {
+  text-decoration: underline;
+}
+
 main {
   height: calc(100vh - 171px - 10em);
   display: -webkit-box;
@@ -100,7 +143,7 @@ main {
           box-shadow: var(--shadow-big);
 }
 
-a.button {
+.button {
   width: 100%;
   font-size: 1.3em;
   text-align: center;
@@ -132,7 +175,8 @@ a.button {
 }
 
 input[type='text'],
-input[type='password'] {
+input[type='password'],
+input[type='number'] {
   display: block;
   height: 43px;
   width: 100%;
@@ -152,6 +196,7 @@ input[type='submit'] {
   font-size: 1.3em;
   padding: 12px;
   margin: 20px 0;
+  border: none;
   outline: none;
   cursor: pointer;
   -webkit-box-shadow: var(--shadow);
@@ -269,12 +314,197 @@ input[type='file'] {
   margin-top: 60px;
 }
 
+#login .checkbox-label {
+  color: var(--purple);
+}
+
+#login input[type='checkbox']:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -3px;
+  left: 0;
+  background-color: var(--purple);
+}
+
 #map {
   width: 100%;
   height: 350px;
   border-radius: 8px;
   -webkit-box-shadow: var(--shadow);
           box-shadow: var(--shadow);
+}
+
+.title {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+#school {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+#school .image {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+}
+
+#school h3 {
+  margin-top: 1em;
+}
+
+#school .descr {
+  margin-top: 5px;
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+#school .school-info li {
+  margin: 1em 0;
+  font-size: 1.2em;
+}
+
+#school .school-info li i {
+  margin-right: 10px;
+}
+
+#school ul li {
+  list-style: none;
+}
+
+#school .checks ul {
+  list-style-type: none;
+}
+
+#school .checks li {
+  display: inline-block;
+}
+
+#school .checks input[type='checkbox'][id^='check-'] {
+  display: none;
+}
+
+#school .checks label {
+  width: 85px;
+  text-align: center;
+  border: 1px solid var(--white);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--lightgray);
+  display: block;
+  position: relative;
+  margin: 10px;
+  cursor: pointer;
+}
+
+#school .checks label:before {
+  background-color: var(--white);
+  color: var(--white);
+  content: ' ';
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  top: -7px;
+  left: 60px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 28px;
+  -webkit-transition-duration: 0.4s;
+          transition-duration: 0.4s;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+#school .checks label i {
+  -webkit-transition-duration: 0.2s;
+          transition-duration: 0.2s;
+  -webkit-transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
+}
+
+#school .checks label i h4 {
+  font-size: 14px;
+  font-family: var(--font);
+  margin-top: 12px;
+}
+
+#school .checks :checked + label {
+  border-color: var(--purple);
+  color: var(--primary);
+}
+
+#school .checks :checked + label:before {
+  content: '✓';
+  font-weight: bold;
+  color: var(--purple);
+  background-color: var(--green);
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  z-index: 1;
+}
+
+#school .checks :checked + label i {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+  z-index: -1;
+}
+
+#donation {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+#donation .items {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 135px 100px;
+      grid-template-columns: 135px 100px;
+  place-content: center;
+}
+
+#donation .items label {
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1 / 2;
+  margin: 0.5em 0;
+  padding-top: 15px;
+}
+
+#donation .items input {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 1;
+  grid-column: 2 / 3;
+  margin: 0.5em 1em;
+}
+
+#donation .thanks {
+  margin-top: 150px;
+}
+
+#donation .back {
+  width: 150px;
+  margin: auto;
 }
 
 .right {

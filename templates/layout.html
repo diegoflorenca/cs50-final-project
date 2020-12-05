@@ -13,18 +13,23 @@
   <body>
     <div id="wrapper">
       <header>
-        <a href="/">
+        <a href="/" class="full-brand">
           <h1 class="brand">TechRecycle</h1>
           <span>for education</span>
         </a>
+        <nav>
+          <ul>
+            {% if session['userId'] and session['isAdmin'] == undefined %}
+            <li><a href="/schools">Schools</a></li>
+            <li><a href="/rank">Global Rank</a></li>
+            <li><a href="/user_page">Donation History</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% endif %}
+          </ul>
+        </nav>
         <h2 class="page-title">{% block pageTitle %} {% endblock %}</h2>
       </header>
-      <main>
-        <ul>
-          {% block headerLinks %} {% endblock %}
-        </ul>
-        {% block content %} {% endblock %}
-      </main>
+      <main>{% block content %} {% endblock %}</main>
     </div>
     {% block javascript %} {% endblock %}
   </body>

@@ -16,7 +16,11 @@ body,
 
 body {
   padding: 2em;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font);
   color: var(--primary);
   background-color: var(--purple);
+}
+
+a {
+  color: var(--purple);
 }

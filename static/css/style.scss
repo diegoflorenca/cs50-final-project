@@ -4,8 +4,12 @@
   --white: #fdfdfd;
   --darkgray: #3d3d3d;
   --lightgray: #8d8d8d;
+  --lightergray: #f3f3f3;
   --green: #3fca28;
   --purple: #65068a;
+  --font: 'Roboto', sans-serif;
+  --shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04),
+    0px 2px 8px rgba(0, 0, 0, 0.08);
   --shadow: 0px 4px 4px rgba(0, 0, 0, 0.04), 0px 4px 16px rgba(0, 0, 0, 0.08);
   --shadow-big: 0px 8px 8px rgba(0, 0, 0, 0.04),
     0px 8px 32px rgba(0, 0, 0, 0.08);
@@ -22,5 +26,6 @@
 @import '_home.scss';
 @import '_login.scss';
 @import '_schools.scss';
+@import '_donate.scss';
 
 @import '_util.scss';

@@ -5,4 +5,19 @@
   .register {
     margin-top: 60px;
   }
+
+  .checkbox-label {
+    color: var(--purple);
+  }
+
+  input[type='checkbox']:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -3px;
+    left: 0;
+    background-color: var(--purple);
+  }
 }
