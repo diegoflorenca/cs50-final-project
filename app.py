@@ -214,13 +214,7 @@ def userPage():
 
         donations = cursor.fetchall()
 
-        score = 0
-        for donation in donations:
-            if donation['received'] == 1:
-                score = score + \
-                    (int(donation['amount']) * int(donation['scores']))
-
-        return render_template('user_page.html', donations=donations, score=score)
+        return render_template('user_page.html', donations=donations)
 
 
 @app.route('/school_page')
@@ -257,7 +251,7 @@ def rank():
         cursor = con.cursor()
 
         cursor.execute(
-            "SELECT users.name, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
+            "SELECT users.id, users.name, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
         rank = cursor.fetchall()
         return render_template('rank.html', rank=rank)
 

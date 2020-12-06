@@ -1,31 +1,27 @@
-{% extends "layout.html" %} {% block headerLinks %}
-<li><a href="/user_page">Donation History</a></li>
-<li><a href="/rank">Global Rank</a></li>
-<li><a href="/schools">Schools</a></li>
-{% endblock %}{% block content %}
-
-<h2>Donations History</h2>
-
-<a href="/logout">Logout</a>
-
-<h3>Your score is {{ score }}</h3>
-
-<table border="1">
-  <thead>
-    <td>School name</td>
-    <td>Donated item</td>
-    <td>Amount</td>
-    <td>Status</td>
-    <td>Item score</td>
-  </thead>
-  {% for donation in donations %}
-  <tr>
-    <td>{{ donation['school'] }}</td>
-    <td>{{ donation['item'] }}</td>
-    <td>{{ donation['amount'] }}</td>
-    <td>{% if donation['received'] == 0 %} No {% else %} Yes {% endif %}</td>
-    <td>{{ donation['scores'] }}</td>
-  </tr>
-  {% endfor %}
-</table>
+{% extends "layout.html" %} {% block pageTitle %} Donations History {% endblock
+%} {% block content %}
+<div id="scroll">
+  <table class="styled-table">
+    <thead>
+      <td>School name</td>
+      <td>Donated item</td>
+      <td>Amount</td>
+      <td>Status</td>
+      <td>Item score</td>
+    </thead>
+    <tbody>
+      {% for donation in donations %}
+      <tr>
+        <td>{{ donation['school'] }}</td>
+        <td>{{ donation['item'] }}</td>
+        <td>{{ donation['amount'] }}</td>
+        <td>
+          {% if donation['received'] == 0 %} No {% else %} Received {% endif %}
+        </td>
+        <td>{{ donation['scores'] * donation['amount'] |int }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock%}

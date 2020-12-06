@@ -1,0 +1,51 @@
+#scroll {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+// Table styling adapted from https://www.youtube.com/watch?v=biI9OFH6Nmg
+.styled-table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 1.2em;
+  min-width: 300px;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+
+  thead {
+    tr {
+      background: var(--purple);
+      color: var(--white);
+      text-align: left;
+      font-weight: bold;
+    }
+  }
+
+  th,
+  td {
+    padding: 12px 15px;
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--lightgray);
+
+      &:nth-of-type(even) {
+        background-color: var(--lightergray);
+      }
+
+      &:last-of-type {
+        border-bottom: 2px solid var(--purple);
+      }
+    }
+  }
+
+  .active {
+    font-weight: bold;
+    color: var(--purple);
+  }
+}
