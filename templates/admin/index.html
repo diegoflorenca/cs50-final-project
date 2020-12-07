@@ -1,47 +1,32 @@
-{% extends "layout.html" %} {% block content %}
-
-<h2>Administration Painel</h2>
-
-<a href="/admin/add">Add school</a>
-<a href="/logout">Logout</a>
-
-{% with messages = get_flashed_messages() %} {% if messages %} {% for message in
-messages %}
-<h4>{{ message }}</h4>
+{% extends "layout.html" %} {% block pageTitle %} Administration Painel {%
+endblock %} {% block content %} {% with messages = get_flashed_messages() %} {%
+if messages %} {% for message in messages %}
+<h4 class="center">{{ message }}</h4>
 {% endfor %} {% endif %} {% endwith %}
 
-<table border="1">
+<table class="styled-table">
   <thead>
-    <td>name</td>
-    <td>address</td>
-    <td>phone</td>
-    <td>email</td>
-    <td>password</td>
-    <td>latitude</td>
-    <td>longitude</td>
-    <td>photo</td>
-    <td colspan="2">--</td>
+    <td>School</td>
+    <td>Contats</td>
+    <td colspan="2"></td>
   </thead>
-  {% for school in schools %}
-  <tr>
-    <td>{{ school['name'] }}</td>
-    <td>
-      {{ school['address'] }} - {{ school['city'] }} - {{ school['state'] }} -
-      {{ school['country'] }}
-    </td>
-    <td>{{ school['phone'] }}</td>
-    <td>{{ school['email'] }}</td>
-    <td>{{ school['password'] }}</td>
-    <td>{{ school['latitude'] }}</td>
-    <td>{{ school['longitude'] }}</td>
-    <td>
-      <img
-        src="{{ url_for('static', filename = 'uploads/' + school['photo']) }}"
-        width="150px"
-      />
-    </td>
-    <td><a href="/admin/remove/{{ school['id'] }}">Remove</a></td>
-  </tr>
-  {% endfor %}
+  <tbody>
+    {% for school in schools %}
+    <tr>
+      <td>
+        <h4>{{ school['name'] }}</h4>
+        <p>{{ school['city'] }} - {{ school['state'] }}</p>
+      </td>
+      <td>
+        <a href="mailto:{{ school['email'] }}">{{ school['email'] }}</a>
+        <p>{{ school['phone'] }}</p>
+      </td>
+      <td colspan="2">
+        <a href="/admin/update/{{ school['id'] }}">Modify</a>
+        <a href="/admin/remove/{{ school['id'] }}">Remove</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endblock%}

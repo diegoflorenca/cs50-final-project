@@ -1,10 +1,10 @@
 #scroll {
   width: 100%;
   height: 100%;
+  padding-right: 1em;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 // Table styling adapted from https://www.youtube.com/watch?v=biI9OFH6Nmg
 .styled-table {

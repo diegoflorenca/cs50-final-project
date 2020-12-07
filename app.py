@@ -42,10 +42,10 @@ def login():
 
         # Check if it's a school or user login
         if(isSchool):
-            print('This is a school login!')
             cursor.execute(
                 "SELECT * FROM `schools` WHERE email = ?", [email])
             redirectPage = '/school_page'
+            session['isSchool'] = True
         else:
             cursor.execute("SELECT * FROM `users` WHERE email = ?", [email])
             redirectPage = '/schools'
@@ -200,7 +200,7 @@ def donated(schoolId):
         return render_template('/donated.html')
 
 
-@app.route('/user_page')
+@app.route('/history')
 def userPage():
     if 'userId' in session:
         userId = session['userId']
@@ -210,11 +210,11 @@ def userPage():
 
         cursor = con.cursor()
         cursor.execute(
-            'SELECT donations.amount, donations.received, schools.name AS school, items.name AS item, items.scores FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id WHERE donations.user_id=?', [userId])
+            'SELECT donations.amount, donations.received, schools.name AS school, items.name AS item, items.scores FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id WHERE donations.user_id=? ORDER BY donations.id DESC', [userId])
 
         donations = cursor.fetchall()
 
-        return render_template('user_page.html', donations=donations)
+        return render_template('history.html', donations=donations)
 
 
 @app.route('/school_page')
@@ -234,7 +234,7 @@ def schoolPage():
             con.commit()
 
         cursor.execute(
-            'SELECT donations.id, donations.amount, donations.received, users.name AS user, items.name AS item, items.scores FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id INNER JOIN `users` ON users.id = donations.user_id WHERE donations.school_id=?', [schoolId])
+            'SELECT donations.id, donations.amount, donations.received, users.name AS user, items.name AS item, items.scores, schools.name AS school FROM `donations` INNER JOIN `schools` ON schools.id = donations.school_id INNER JOIN `items` ON items.id = donations.item_id INNER JOIN `users` ON users.id = donations.user_id WHERE donations.school_id=?', [schoolId])
 
         donations = cursor.fetchall()
 
@@ -354,6 +354,70 @@ def add():
         return redirect('/admin')
 
 
+@app.route('/admin/update', methods=['POST', 'GET'])
+def add():
+    if 'isAdmin' in session:
+        if request.method == 'POST':
+
+            # Take the values from the form
+            name = request.form['name']
+            address = request.form['address']
+            city = request.form['city']
+            state = request.form['state']
+            country = request.form['country']
+            phone = request.form['phone']
+            email = request.form['email']
+            password = request.form['password']
+            latitude = request.form['latitude']
+            longitude = request.form['longitude']
+            file = request.files['file']
+            items = request.form.getlist('items')
+
+            con = sql.connect(DATABASE)
+            con.row_factory = sql.Row
+            cursor = con.cursor()
+
+            # Check if the type of file is allowed
+            if file and allowed_file(file.filename):
+                # Take the file name
+                filename = secure_filename(file.filename)
+                # Save the file extension
+                extension = filename.rsplit('.', 1)[1]
+                # Sum the current date to the file name
+                filename = filename.rsplit(
+                    '.', 1)[0] + str(datetime.now().time())
+                # Hash the filename and reinsert the extension
+                h = hashlib.sha256()
+                h.update(filename.encode('utf-8'))
+                newFilename = h.hexdigest() + '.' + extension
+                # Copy the file to the upload folder
+                file.save(os.path.join(
+                    app.config['UPLOAD_FOLDER'], newFilename))
+            else:
+                flash('Error: Image not uploaded')
+                return redirect('/admin')
+
+            cursor.execute("UPDATE `schools` (name, address, city, state, country, phone, email, password, latitude, longitude, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (
+                name, address, city, state, country, phone, email, password, latitude, longitude, newFilename))
+            con.commit()
+
+            schoolId = cursor.lastrowid
+
+            for item in items:
+                # Remove all itens and insert again?
+                cursor.execute(
+                    "INSERT INTO `school_items` (school_id, item_id) VALUES (?,?)", (schoolId, item))
+                con.commit()
+
+            flash('School successfully added.')
+            return redirect('/admin')
+        else:
+            # Take the id of the school then open the page
+            return render_template('admin/update_school.html')
+    else:
+        return redirect('/admin')
+
+
 @app.route('/admin/remove/<id>')
 def remove(id):
     if 'isAdmin' in session:
@@ -375,6 +439,8 @@ def remove(id):
 @app.route('/logout')
 def logout():
     session.pop('userId', None)
+    if 'isSchool' in session:
+        session.pop('isSchool', None)
     if 'isAdmin' in session:
         session.pop('isAdmin', None)
     return redirect('/login')

@@ -1,0 +1,40 @@
+#map {
+  width: 100%;
+  height: 250px;
+  padding: 0;
+  margin: 0;
+}
+.styled-form {
+  padding: 0.6em;
+
+  fieldset {
+    padding: 1em;
+    border: none;
+
+    legend {
+      margin-left: -1.5em;
+      font-weight: bold;
+    }
+
+    .find-city {
+      width: 50%;
+      margin: 20px auto;
+    }
+
+    .columns {
+      display: flex;
+      input {
+        margin: 0 1em;
+      }
+    }
+
+    .checkboxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .chb {
+        margin: 0.5em 0;
+      }
+    }
+  }
+}

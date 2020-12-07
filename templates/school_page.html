@@ -1,15 +1,9 @@
-{% extends "layout.html" %} {% block headerLinks %}
-<li><a href="/user_page">Donation History</a></li>
-<li><a href="/rank">Global Rank</a></li>
-<li><a href="/schools">Schools</a></li>
+{% extends "layout.html" %} {% block pageTitle %} {{ donations[0]['school'] }}
 {% endblock %} {% block content %}
-<h2>School name</h2>
 
-<a href="/logout">Logout</a>
+<h2 class="center marg-t">New Donations</h2>
 
-<h2>New Donations</h2>
-
-<table border="1">
+<table class="styled-table">
   <thead>
     <td>Donator name</td>
     <td>Donated item</td>
@@ -27,9 +21,9 @@
   {% endif %} {% endfor %}
 </table>
 
-<h2>Donations History</h2>
+<h2 class="center marg-t">Donations History</h2>
 
-<table border="1">
+<table class="styled-table">
   <thead>
     <td>Donator name</td>
     <td>Donated item</td>

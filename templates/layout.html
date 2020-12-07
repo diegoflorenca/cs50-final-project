@@ -19,10 +19,21 @@
         </a>
         <nav>
           <ul>
-            {% if session['userId'] and session['isAdmin'] == undefined %}
+            {% if session['userId'] and session['isSchool'] == undefined and
+            session['isAdmin'] == undefined %}
+            <!-- Normal user is logged -->
             <li><a href="/schools">Schools</a></li>
             <li><a href="/rank">Global Rank</a></li>
-            <li><a href="/user_page">Donation History</a></li>
+            <li><a href="/history">Donation History</a></li>
+            <li><a href="/logout">Logout</a></li>
+
+            {% elif session['userId'] and session['isSchool'] and
+            session['isAdmin'] == undefined %}
+            <!-- User is logged as a school -->
+            <li><a href="/logout">Logout</a></li>
+            {% elif session['userId'] and session['isSchool'] == undefined and
+            session['isAdmin'] != undefined %}
+            <li><a href="/admin/add">Add school</a></li>
             <li><a href="/logout">Logout</a></li>
             {% endif %}
           </ul>

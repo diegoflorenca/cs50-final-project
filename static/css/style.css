@@ -98,9 +98,6 @@ header nav ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 header nav ul li {
@@ -152,6 +149,8 @@ main {
   padding: 12px;
   margin: 20px 0;
   outline: none;
+  border: none;
+  cursor: pointer;
   display: block;
   -webkit-box-shadow: var(--shadow);
           box-shadow: var(--shadow);
@@ -191,7 +190,8 @@ input[type='number'] {
           box-shadow: var(--shadow);
 }
 
-input[type='submit'] {
+input[type='submit'],
+input[type='button'] {
   width: 100%;
   font-size: 1.3em;
   padding: 12px;
@@ -289,6 +289,7 @@ input[type='file'] {
 #scroll {
   width: 100%;
   height: 100%;
+  padding-right: 1em;
   overflow: auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -297,9 +298,6 @@ input[type='file'] {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
 }
 
 .styled-table {
@@ -557,6 +555,53 @@ input[type='file'] {
 #donation .back {
   width: 150px;
   margin: auto;
+}
+
+#map {
+  width: 100%;
+  height: 250px;
+  padding: 0;
+  margin: 0;
+}
+
+.styled-form {
+  padding: 0.6em;
+}
+
+.styled-form fieldset {
+  padding: 1em;
+  border: none;
+}
+
+.styled-form fieldset legend {
+  margin-left: -1.5em;
+  font-weight: bold;
+}
+
+.styled-form fieldset .find-city {
+  width: 50%;
+  margin: 20px auto;
+}
+
+.styled-form fieldset .columns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.styled-form fieldset .columns input {
+  margin: 0 1em;
+}
+
+.styled-form fieldset .checkboxes {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+}
+
+.styled-form fieldset .checkboxes .chb {
+  margin: 0.5em 0;
 }
 
 .right {
