@@ -33,6 +33,7 @@
             <li><a href="/logout">Logout</a></li>
             {% elif session['userId'] and session['isSchool'] == undefined and
             session['isAdmin'] != undefined %}
+            <li><a href="/admin">Home</a></li>
             <li><a href="/admin/add">Add school</a></li>
             <li><a href="/logout">Logout</a></li>
             {% endif %}

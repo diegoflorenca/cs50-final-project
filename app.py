@@ -354,8 +354,8 @@ def add():
         return redirect('/admin')
 
 
-@app.route('/admin/update', methods=['POST', 'GET'])
-def add():
+@app.route('/admin/update/<schoolId>', methods=['POST', 'GET'])
+def update(schoolId):
     if 'isAdmin' in session:
         if request.method == 'POST':
 
@@ -389,36 +389,53 @@ def add():
                 # Hash the filename and reinsert the extension
                 h = hashlib.sha256()
                 h.update(filename.encode('utf-8'))
-                newFilename = h.hexdigest() + '.' + extension
+                photo = h.hexdigest() + '.' + extension
                 # Copy the file to the upload folder
                 file.save(os.path.join(
-                    app.config['UPLOAD_FOLDER'], newFilename))
+                    app.config['UPLOAD_FOLDER'], photo))
             else:
-                flash('Error: Image not uploaded')
-                return redirect('/admin')
+                photo = request.form['photo']
 
-            cursor.execute("UPDATE `schools` (name, address, city, state, country, phone, email, password, latitude, longitude, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (
-                name, address, city, state, country, phone, email, password, latitude, longitude, newFilename))
+            cursor.execute("UPDATE `schools` SET name=?, address=?, city=?, state=?, country=?, phone=?, email=?, password=?, latitude=?, longitude=?, photo=? WHERE id=?", (
+                name, address, city, state, country, phone, email, password, latitude, longitude, photo, schoolId))
             con.commit()
 
-            schoolId = cursor.lastrowid
+            # Remove all items from school_items table
+            cursor.execute(
+                "DELETE FROM `school_items` WHERE school_id=?", [schoolId])
+            con.commit()
 
             for item in items:
-                # Remove all itens and insert again?
+                print(item)
                 cursor.execute(
                     "INSERT INTO `school_items` (school_id, item_id) VALUES (?,?)", (schoolId, item))
                 con.commit()
 
-            flash('School successfully added.')
+            flash('School successfully updated.')
             return redirect('/admin')
         else:
-            # Take the id of the school then open the page
-            return render_template('admin/update_school.html')
+            con = sql.connect(DATABASE)
+            con.row_factory = sql.Row
+            cursor = con.cursor()
+
+            cursor.execute("SELECT * FROM `schools` WHERE id=?", [schoolId])
+            school = cursor.fetchone()
+
+            cursor.execute(
+                "SELECT item_id FROM `school_items` WHERE school_id=?", [schoolId])
+
+            items = cursor.fetchall()
+
+            itemsId = []
+            for item in items:
+                itemsId.append(item['item_id'])
+
+            return render_template('admin/update_school.html', school=school, items=itemsId)
     else:
         return redirect('/admin')
 
 
-@app.route('/admin/remove/<id>')
+@ app.route('/admin/remove/<id>')
 def remove(id):
     if 'isAdmin' in session:
         con = sql.connect(DATABASE)
@@ -436,7 +453,7 @@ def remove(id):
         return redirect('/admin')
 
 
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     session.pop('userId', None)
     if 'isSchool' in session:
@@ -448,7 +465,7 @@ def logout():
 # Favicon route
 
 
-@app.route('/favicon.ico', methods=['GET'])
+@ app.route('/favicon.ico', methods=['GET'])
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'images/favicon.ico')
 

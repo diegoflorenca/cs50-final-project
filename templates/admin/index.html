@@ -21,9 +21,13 @@ if messages %} {% for message in messages %}
         <a href="mailto:{{ school['email'] }}">{{ school['email'] }}</a>
         <p>{{ school['phone'] }}</p>
       </td>
-      <td colspan="2">
-        <a href="/admin/update/{{ school['id'] }}">Modify</a>
-        <a href="/admin/remove/{{ school['id'] }}">Remove</a>
+      <td colspan="2" class="center">
+        <a href="/admin/update/{{ school['id'] }}" class="button-small outline"
+          >Update</a
+        >
+        <a href="/admin/remove/{{ school['id'] }}" class="button-small outline"
+          >Remove</a
+        >
       </td>
     </tr>
     {% endfor %}

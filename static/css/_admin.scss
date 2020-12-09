@@ -23,9 +23,18 @@
 
     .columns {
       display: flex;
-      input {
+      input,
+      label {
         margin: 0 1em;
       }
+      .alone-input {
+        width: calc(50% - 2em);
+      }
+    }
+
+    .image {
+      height: 250px;
+      margin: 1em;
     }
 
     .checkboxes {

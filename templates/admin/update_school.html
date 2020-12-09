@@ -3,34 +3,64 @@
   rel="stylesheet"
   href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"
 />
-<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<!-- Font awesome icons -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" />
 {% endblock %} {% block pageTitle %} Update school informations {% endblock %}
 {%block content%}
 <div id="scroll">
   <form
     class="styled-form"
-    action="/admin/add"
+    action="/admin/update/{{school['id']}}"
     method="POST"
     enctype="multipart/form-data"
   >
     <fieldset>
       <legend>Informations about the school.</legend>
       <div class="columns">
-        <input name="name" id="name" type="text" placeholder="School name" />
+        <input
+          name="name"
+          id="name"
+          type="text"
+          placeholder="School name"
+          value="{{ school['name'] }}"
+        />
 
-        <input name="email" id="email" type="text" placeholder="Email" />
+        <input
+          name="email"
+          id="email"
+          type="text"
+          placeholder="Email"
+          value="{{ school['email'] }}"
+        />
       </div>
       <div class="columns marg-t">
-        <input name="phone" id="phone" type="text" placeholder="Phone" />
+        <input
+          class="alone-input"
+          name="phone"
+          id="phone"
+          type="text"
+          placeholder="Phone"
+          value="{{ school['phone'] }}"
+        />
         <input
           name="password"
           id="password"
-          type="password"
+          type="hidden"
           placeholder="Password"
+          value="{{ school['password'] }}"
         />
       </div>
-      <div>
-        <input name="file" id="photo" type="file" placeholder="Photo" />
+      <div
+        class="image"
+        style="background-image: url( {{ url_for('static', filename = 'uploads/' + school['photo']) }} );"
+      ></div>
+      <div class="columns marg-t">
+        <label for="photo" class="photo-input solid">
+          <i class="fas fa-arrow-circle-up"></i
+          ><span class="photo-text">Change image</span>
+        </label>
+        <input id="photo" type="file" name="file" />
+        <input type="hidden" name="photo" value="{{ school['photo'] }}" />
       </div>
     </fieldset>
 
@@ -41,18 +71,51 @@
           id="address"
           type="text"
           placeholder="Full address"
+          value="{{ school['address'] }}"
         />
       </div>
       <div class="columns marg-b">
-        <input name="city" id="city" type="text" placeholder="City" />
-        <input name="state" id="state" type="text" placeholder="State" />
-        <input name="country" id="country" type="text" placeholder="Country" />
+        <input
+          name="city"
+          id="city"
+          type="text"
+          placeholder="City"
+          value="{{ school['city'] }}"
+        />
+        <input
+          name="state"
+          id="state"
+          type="text"
+          placeholder="State"
+          value="{{ school['state'] }}"
+        />
+        <input
+          name="country"
+          id="country"
+          type="text"
+          placeholder="Country"
+          value="{{ school['country'] }}"
+        />
       </div>
       <div class="location">
         <h4 class="center">Set school location on map</h4>
         <div id="search">
-          <input type="hidden" name="latitude" value="" id="lat" size="12" />
-          <input type="hidden" name="longitude" value="" id="lon" size="12" />
+          <input
+            type="hidden"
+            name="latitude"
+            value=""
+            id="lat"
+            size="12"
+            value="{{ school['latitude'] }}"
+          />
+          <input
+            type="hidden"
+            name="longitude"
+            value=""
+            id="lon"
+            size="12"
+            value="{{ school['longitude'] }}"
+          />
           <div id="map"></div>
           <h4 class="center marg-t" id="message"></h4>
           <button
@@ -65,45 +128,129 @@
         </div>
       </div>
     </fieldset>
-
     <fieldset>
       <legend>Choose which items this school accepts.</legend>
       <div class="checkboxes">
         <div class="chb">
-          <input type="checkbox" id="smartphone" name="items" value="1" />
+          <input
+            type="checkbox"
+            id="smartphone"
+            name="items"
+            value="1"
+            {%
+            if
+            1
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="smartphone">Smartphone</label>
         </div>
         <div class="chb">
-          <input type="checkbox" id="desktop" name="items" value="2" />
+          <input
+            type="checkbox"
+            id="desktop"
+            name="items"
+            value="2"
+            {%
+            if
+            2
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="desktop">Desktop Computer</label>
         </div>
         <div class="chb">
-          <input type="checkbox" id="laptop" name="items" value="3" />
+          <input
+            type="checkbox"
+            id="laptop"
+            name="items"
+            value="3"
+            {%
+            if
+            3
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="laptop">Laptop</label>
         </div>
         <div class="chb">
-          <input type="checkbox" id="monitor" name="items" value="6" />
+          <input
+            type="checkbox"
+            id="monitor"
+            name="items"
+            value="6"
+            {%
+            if
+            6
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="monitor">Monitor</label>
         </div>
         <div class="chb">
-          <input type="checkbox" id="printer" name="items" value="4" />
+          <input
+            type="checkbox"
+            id="printer"
+            name="items"
+            value="4"
+            {%
+            if
+            4
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="printer">Printer</label>
         </div>
         <div class="chb">
-          <input type="checkbox" id="cable" name="items" value="5" />
+          <input
+            type="checkbox"
+            id="cable"
+            name="items"
+            value="5"
+            {%
+            if
+            5
+            in
+            items
+            %}
+            checked
+            {%
+            endif%}
+          />
           <label class="checkbox-label" for="cable">Cable</label>
         </div>
       </div>
     </fieldset>
-
-    <input type="submit" value="Add" />
+    <input type="submit" value="Update" class="button solid" />
   </form>
 </div>
 {% endblock %} {% block javascript %}
+<!-- Leaflet import -->
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 <script type="text/javascript">
   // São Paulo, Brazil
-  var startlat = -23.5558559;
-  var startlon = -46.6625292;
+  var startlat = "{{ school['latitude'] }}";
+  var startlon = "{{ school['longitude'] }}";
 
   document.getElementById('lat').value = startlat;
   document.getElementById('lon').value = startlon;
