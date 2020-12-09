@@ -55,8 +55,12 @@ def login():
             flash('User not found.')
             return redirect('/login')
 
-        # Need to Hash Password
-        if user['password'] != password:
+        # Hash the user password
+        p = hashlib.sha256()
+        p.update(password.encode('utf-8'))
+        hashedPassword = p.hexdigest()
+
+        if user['password'] != hashedPassword:
             flash('Password incorect, please try again.')
             return redirect('/login')
         session['userId'] = user['id']
@@ -85,6 +89,11 @@ def register():
             flash('User already registred.')
             return redirect('/register')
 
+        # Hash the user password
+        p = hashlib.sha256()
+        p.update(password.encode('utf-8'))
+        hashedPassword = p.hexdigest()
+
         # Check if the type of file is allowed
         if file and allowed_file(file.filename):
             # Take the file name
@@ -104,13 +113,13 @@ def register():
             return redirect('/register')
 
         cursor.execute("INSERT INTO `users` (name, email, password, photo)VALUES (?,?,?,?)", (
-            name, email, password, newFilename))
+            name, email, hashedPassword, newFilename))
         con.commit()
 
         flash('New user added successfully, login to continue!')
         return redirect('/login')
     else:
-        return render_template('add_user.html')
+        return render_template('register.html')
 
 
 @app.route('/schools')
@@ -254,6 +263,14 @@ def rank():
             "SELECT users.id, users.name, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
         rank = cursor.fetchall()
         return render_template('rank.html', rank=rank)
+
+
+# @app.rout('/password', methods=['POST', 'GET'])
+# def password():
+#     if request.method == 'POST':
+#         return 'Something'
+#     else:
+#         return 'Another something'
 
 
 @app.route('/admin', methods=['GET', 'POST'])
