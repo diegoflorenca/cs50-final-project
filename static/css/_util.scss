@@ -18,3 +18,10 @@
 .normal {
   font-weight: normal;
 }
+
+#map {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}

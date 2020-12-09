@@ -265,12 +265,29 @@ def rank():
         return render_template('rank.html', rank=rank)
 
 
-# @app.rout('/password', methods=['POST', 'GET'])
-# def password():
-#     if request.method == 'POST':
-#         return 'Something'
-#     else:
-#         return 'Another something'
+@app.route('/password', methods=['POST', 'GET'])
+def password():
+    if request.method == 'POST':
+        newPassword = request.form.get('newPassword')
+
+        con = sql.connect(DATABASE)
+        con.row_factory = sql.Row
+        cursor = con.cursor()
+
+        # Hash the user password
+        p = hashlib.sha256()
+        p.update(newPassword.encode('utf-8'))
+        hashedPassword = p.hexdigest()
+
+        cursor.execute("UPDATE `users` SET password=?  WHERE id=?",
+                       (hashedPassword, session['userId']))
+
+        con.commit()
+
+        flash('Password changed successfully.')
+        return redirect('/password')
+    else:
+        return render_template('password.html')
 
 
 @app.route('/admin', methods=['GET', 'POST'])

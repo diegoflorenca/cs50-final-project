@@ -86,7 +86,7 @@ header .page-title {
 }
 
 header nav {
-  width: 436px;
+  width: 500px;
   padding: 0 10px;
   position: absolute;
   top: -56px;
@@ -219,6 +219,19 @@ input[type='button'] {
           box-shadow: var(--shadow);
   -webkit-transition: all 300ms ease-out;
   transition: all 300ms ease-out;
+}
+
+input[type='submit']:disabled,
+button:disabled {
+  background-color: var(--lightgray);
+  -webkit-transition: none;
+  transition: none;
+  cursor: default;
+}
+
+input[type='submit']:disabled:hover,
+button:disabled:hover {
+  opacity: 1;
 }
 
 .checkbox-label {
@@ -397,14 +410,6 @@ input[type='file'] {
   top: -3px;
   left: 0;
   background-color: var(--purple);
-}
-
-#map {
-  width: 100%;
-  height: 350px;
-  border-radius: 8px;
-  -webkit-box-shadow: var(--shadow);
-          box-shadow: var(--shadow);
 }
 
 .title {
@@ -648,5 +653,13 @@ input[type='file'] {
 
 .normal {
   font-weight: normal;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  -webkit-box-shadow: var(--shadow);
+          box-shadow: var(--shadow);
 }
 /*# sourceMappingURL=style.css.map */

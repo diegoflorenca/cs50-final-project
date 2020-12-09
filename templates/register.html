@@ -6,28 +6,29 @@ donator! {% endblock %} {% block content %}{% with messages =
 get_flashed_messages() %} {% if messages %} {% for message in messages %}
 <h4 class="center">{{ message }}</h4>
 {% endfor %} {% endif %} {% endwith %}
+<div id="login">
+  <form action="/register" method="POST" enctype="multipart/form-data">
+    <input name="name" id="name" type="text" placeholder="Your name" required />
 
-<form action="/register" method="POST" enctype="multipart/form-data">
-  <input name="name" id="name" type="text" placeholder="Your name" required />
+    <input name="email" id="email" type="text" placeholder="Email" required />
 
-  <input name="email" id="email" type="text" placeholder="Email" required />
+    <label for="photo" class="photo-input">
+      <i class="fas fa-arrow-circle-up"></i
+      ><span class="photo-text">Select a profile photo</span>
+    </label>
+    <input id="photo" type="file" name="file" required />
 
-  <label for="photo" class="photo-input">
-    <i class="fas fa-arrow-circle-up"></i
-    ><span class="photo-text">Select a profile photo</span>
-  </label>
-  <input id="photo" type="file" name="file" required />
+    <input
+      name="password"
+      id="password"
+      type="password"
+      placeholder="Password"
+      required
+    />
 
-  <input
-    name="password"
-    id="password"
-    type="password"
-    placeholder="Password"
-    required
-  />
-
-  <input type="submit" value="Register" class="button solid" />
-</form>
+    <input type="submit" value="Register" class="button solid" />
+  </form>
+</div>
 {% endblock %} {% block javascript %}
 
 <script>

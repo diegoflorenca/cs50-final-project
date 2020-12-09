@@ -23,8 +23,11 @@
             session['isAdmin'] == undefined %}
             <!-- Normal user is logged -->
             <li><a href="/schools">Schools</a></li>
-            <li><a href="/rank">Global Rank</a></li>
-            <li><a href="/history">Donation History</a></li>
+            <li><a href="/rank">Rank</a></li>
+            <li><a href="/history">My Donations</a></li>
+            <li>
+              <a href="/password">Change Password</a>
+            </li>
             <li><a href="/logout">Logout</a></li>
 
             {% elif session['userId'] and session['isSchool'] and
