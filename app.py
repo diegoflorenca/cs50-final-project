@@ -305,8 +305,12 @@ def admin():
             "SELECT * FROM `users` WHERE email = ?", [email])
         row = cursor.fetchone()
 
-        # TODO Hash Password
-        if row['password'] != password:
+        # Hash the user password
+        p = hashlib.sha256()
+        p.update(password.encode('utf-8'))
+        hashedPassword = p.hexdigest()
+
+        if row['password'] != hashedPassword:
             msg = 'Password incorect, please try again.'
             return render_template('result.html', page='/admin', text='Go Back', msg=msg)
         session['userId'] = row['id']
@@ -345,6 +349,11 @@ def add():
             file = request.files['file']
             items = request.form.getlist('items')
 
+            # Hash the user password
+            p = hashlib.sha256()
+            p.update(password.encode('utf-8'))
+            hashedPassword = p.hexdigest()
+
             con = sql.connect(DATABASE)
             con.row_factory = sql.Row
             cursor = con.cursor()
@@ -370,7 +379,7 @@ def add():
                 return redirect('/admin')
 
             cursor.execute("INSERT INTO `schools` (name, address, city, state, country, phone, email, password, latitude, longitude, photo) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (
-                name, address, city, state, country, phone, email, password, latitude, longitude, newFilename))
+                name, address, city, state, country, phone, email, hashedPassword, latitude, longitude, newFilename))
             con.commit()
 
             schoolId = cursor.lastrowid

@@ -1,7 +1,8 @@
-{% extends "layout.html" %} {% block pageTitle %} {{ donations[0]['school'] }}
-{% endblock %} {% block content %}
-
-<h2 class="center marg-t">New Donations</h2>
+{% extends "layout.html" %} {% block pageTitle %} Donations {% endblock %} {%
+block content %} {% if not donations %}
+<h2 class="center marg-t">No donations yet!</h2>
+{% else %}
+<h2 class="center marg-t">{{ donations[0]['school'] }}</h2>
 
 <table class="styled-table">
   <thead>
@@ -37,4 +38,4 @@
   </tr>
   {% endif %} {% endfor %}
 </table>
-{% endblock%}
+{% endif %} {% endblock%}
