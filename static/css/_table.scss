@@ -48,4 +48,17 @@
     font-weight: bold;
     color: var(--purple);
   }
+  .profile {
+    display: flex;
+
+    .user-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+    }
+    .name {
+      margin-top: 20px;
+      margin-left: 15px;
+    }
+  }
 }

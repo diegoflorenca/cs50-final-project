@@ -13,7 +13,15 @@ block content %}
       <tr class="{{'active' if session['userId'] == r['id'] }}">
         <!-- Print the index of the loop, in this case it matches with the rank position -->
         <td>{{ loop.index }}</td>
-        <td>{{ r['name'] }}</td>
+        <td>
+          <div class="profile">
+            <img
+              class="user-photo"
+              src="{{ url_for('static', filename = 'uploads/' + r['photo']) }}"
+            />
+            <p class="name">{{ r['name'] }}</p>
+          </div>
+        </td>
         <td>{{ r['score'] }}</td>
       </tr>
       {% endfor %}

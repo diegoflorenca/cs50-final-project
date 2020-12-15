@@ -369,6 +369,23 @@ input[type='file'] {
   color: var(--purple);
 }
 
+.styled-table .profile {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.styled-table .profile .user-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+
+.styled-table .profile .name {
+  margin-top: 20px;
+  margin-left: 15px;
+}
+
 #home {
   width: 100%;
 }

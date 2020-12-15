@@ -260,7 +260,7 @@ def rank():
         cursor = con.cursor()
 
         cursor.execute(
-            "SELECT users.id, users.name, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
+            "SELECT users.id, users.name, users.photo, SUM(donations.amount * items.scores) AS score FROM donations INNER JOIN items ON items.id = donations.item_id INNER JOIN users ON users.id = donations.user_id WHERE donations.received=1 GROUP BY user_id ORDER BY SUM(donations.amount * items.scores) DESC")
         rank = cursor.fetchall()
         return render_template('rank.html', rank=rank)
 
