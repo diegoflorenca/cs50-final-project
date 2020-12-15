@@ -1,13 +1,13 @@
-{% extends "layout.html" %} {% block pageTitle %} You already have a login? {%
-endblock %} {% block content %} {% with messages = get_flashed_messages() %} {%
-if messages %} {% for message in messages %}
+{% extends "layout.html" %} {% block pageTitle %} Do you already have a login?
+{% endblock %} {% block content %} {% with messages = get_flashed_messages() %}
+{% if messages %} {% for message in messages %}
 <h4 class="center">{{ message }}</h4>
 {% endfor %} {% endif %} {% endwith %}
 <div id="login">
   <form action="/login" method="POST">
     <div class="right">
       <label class="checkbox-label"
-        >I'm a school <input name="isSchool" id="isSchool" type="checkbox"
+        >School login? <input name="isSchool" id="isSchool" type="checkbox"
       /></label>
     </div>
     <input name="email" id="email" type="text" placeholder="Your email" />

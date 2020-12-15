@@ -20,9 +20,9 @@ school['name'] }}{% endblock %} {% block content %}
     </li>
   </ul>
   <form action="/donate/{{ school['id'] }}" method="POST">
-    <h3 class="marg-t marg-b">Want to donate for this school?</h3>
-    <h4 class="marg-b normal">Choose items do you wan to donate.</h4>
-    <p class="descr">This shcool accepts the folow items:</p>
+    <h3 class="marg-t marg-b">Want to donate to this school?</h3>
+    <h4 class="marg-b normal">Choose items do you want to donate.</h4>
+    <p class="descr">This school accepts the following items:</p>
     <div class="checks">
       <ul>
         {% for item in items %}

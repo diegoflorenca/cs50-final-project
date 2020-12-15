@@ -1,9 +1,9 @@
 {% extends "layout.html" %} {% block link %}
 <!-- Font awesome icons -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" />
-{% endblock %} {% block pageTitle %} We are very pleased to welcome a new
-donator! {% endblock %} {% block content %}{% with messages =
-get_flashed_messages() %} {% if messages %} {% for message in messages %}
+{% endblock %} {% block pageTitle %} We are pleased to welcome a new donator! {%
+endblock %} {% block content %}{% with messages = get_flashed_messages() %} {%
+if messages %} {% for message in messages %}
 <h4 class="center">{{ message }}</h4>
 {% endfor %} {% endif %} {% endwith %}
 <div id="login">

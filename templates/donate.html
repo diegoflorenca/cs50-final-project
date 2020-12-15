@@ -4,7 +4,7 @@ endblock %} {% block content %}
   <h3>You are helping the {{ school['name'] }}</h3>
 
   <form action="/donated/{{ school['id'] }}" method="POST">
-    <h4 class="center">Please, informe the amount of each item.</h4>
+    <h4 class="center">Please, inform the amount of each item.</h4>
     <div class="items">
       {% for item in items %}
       <input type="hidden" name="id" value="{{item.id}}" />
