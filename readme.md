@@ -1,6 +1,6 @@
 # CS50 - Final Project - Tech Recycle for Education
 
-Hello, my name is Diego, I’m 37 years old, I’m from Brazil and I live in the State of São Paulo. I’m a teacher at a school, and it was thinking about the school that I came up with the idea for the final CS50 project.
+Hello, my name is Diego, I’m from Brazil and I live in the State of São Paulo. I’m a teacher at a school, and it was thinking about the school that I came up with the idea for the final CS50 project.
 
 We have a project to create an electronics, computer and robotics laboratory at the school, but we have no resources or equipment. We started with small classes teaching programming with Arduino but we had limited resources because the teachers donated all material.
 
